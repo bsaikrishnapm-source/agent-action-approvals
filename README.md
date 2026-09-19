@@ -1,5 +1,18 @@
 # Agent Action Approval Simulator
 
+## Start here
+
+**Problem:** Decide whether an AI agent may read an order, propose a refund, or needs human approval.
+
+**What is built:** An independent Python prototype or analysis, with product documents and synthetic data.
+
+**Code to run:** `python3 simulate.py`
+
+**What you will see:** Prints a decision for each of 10 scenarios and checks it against the expected outcome.
+
+**Scope:** Runs locally in a terminal. No live customer integration, deployed application, or real AI model call is included.
+
+
 **Complete independent prototype | Agentic product design and tool-use governance**
 
 ## Decision
@@ -35,3 +48,11 @@ python3 simulate.py
 ```
 
 [View the full product management portfolio](https://github.com/bsaikrishnapm-source/bsaikrishnapm-source)
+
+## Inspect the data in Excel
+
+```bash
+python3 export_data.py --output exports
+```
+
+Creates CSV tables from the bundled synthetic data. The terminal output identifies each table and its row count. For a different JSON file, add `--input path/to/data.json`. Existing table CSV files in the output directory are replaced. These exports contain scenario inputs, not production results.
