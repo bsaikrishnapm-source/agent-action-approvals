@@ -1,0 +1,92 @@
+window.DEMO_DATA = [
+  {
+    "id": "A1",
+    "action": "read_order",
+    "tenant_ok": true,
+    "amount": 0,
+    "approval": false,
+    "duplicate": false,
+    "expected": "ALLOW_READ"
+  },
+  {
+    "id": "A2",
+    "action": "issue_refund",
+    "tenant_ok": true,
+    "amount": 40,
+    "approval": false,
+    "duplicate": false,
+    "expected": "REVIEW"
+  },
+  {
+    "id": "A3",
+    "action": "issue_refund",
+    "tenant_ok": true,
+    "amount": 40,
+    "approval": true,
+    "duplicate": false,
+    "expected": "SIMULATE_EXECUTION"
+  },
+  {
+    "id": "A4",
+    "action": "issue_refund",
+    "tenant_ok": true,
+    "amount": 400,
+    "approval": true,
+    "duplicate": false,
+    "expected": "REVIEW"
+  },
+  {
+    "id": "A5",
+    "action": "issue_refund",
+    "tenant_ok": false,
+    "amount": 40,
+    "approval": true,
+    "duplicate": false,
+    "expected": "DENY"
+  },
+  {
+    "id": "A6",
+    "action": "issue_refund",
+    "tenant_ok": true,
+    "amount": 40,
+    "approval": true,
+    "duplicate": true,
+    "expected": "REPLAY_NOOP"
+  },
+  {
+    "id": "A7",
+    "action": "delete_account",
+    "tenant_ok": true,
+    "amount": 0,
+    "approval": true,
+    "duplicate": false,
+    "expected": "DENY"
+  },
+  {
+    "id": "A8",
+    "action": "issue_refund",
+    "tenant_ok": true,
+    "amount": -1,
+    "approval": true,
+    "duplicate": false,
+    "expected": "DENY"
+  },
+  {
+    "id": "A9",
+    "action": "read_order",
+    "tenant_ok": false,
+    "amount": 0,
+    "approval": false,
+    "duplicate": false,
+    "expected": "DENY"
+  },
+  {
+    "id": "A10",
+    "action": "issue_refund",
+    "tenant_ok": true,
+    "amount": 100,
+    "approval": true,
+    "duplicate": false,
+    "expected": "SIMULATE_EXECUTION"
+  }
+];

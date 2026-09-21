@@ -20,8 +20,9 @@ The simulator checks the allowlist and tenant boundary before actions. Invalid n
 
 Signed approvals must expire, bind to a canonical payload, and be checked against the reviewer's role. Idempotency keys must be scoped to the tenant and action, with an atomic check-and-write. Handle partial API failure by checking prior execution status before retrying. Audit logs must be append-only with appropriate retention.
 
-These controls are specified, not implemented in the boolean-based simulator.
+The original Python simulator uses boolean fixtures. The new browser demo binds approval to an exact canonical payload, models expiry and reviewer thresholds, and keeps a request-scoped execution map for replay handling. Its actors and storage remain client-side simulations. Signed authorization, atomic durable execution and provider reconciliation remain specified production requirements; see DEMO_GUIDE.md.
 
 ## Metrics and release decision
 
 Measure unauthorized action rate, duplicate execution rate, approval latency, rejection reasons, and successful task completion. Zero unauthorized writes and zero duplicate writes are release gates in the test environment. Recommendation: prototype complete; no real-money rollout without server-side controls and independent security review.
+

@@ -1,0 +1,12 @@
+"use strict";
+const assert=require("node:assert/strict");const {test}=require("node:test");const fs=require("node:fs");const vm=require("node:vm");const path=require("node:path");const P=require("./demo/engine.js");const context={window:{}};vm.runInNewContext(fs.readFileSync(path.join(__dirname,"demo/data.js"),"utf8"),context);const data=JSON.parse(JSON.stringify(context.window.DEMO_DATA));const person={tenant:"alpha",role:"support",revoked:false};
+
+const action={tenant:"alpha",request_id:"r1",order:"o1",action:"issue_refund",amount:40,currency:"USD"};
+test("pending requests cannot execute",()=>{const m=new P.Approvals();m.propose(action,person,0);assert.throws(()=>m.execute(action,person,1),/not approved/);});
+test("approval permits one execution and replay is a no-op",()=>{const m=new P.Approvals();const r=m.propose(action,person,0);m.review(r.key,"APPROVED",person,1);assert.equal(m.execute(action,person,2).status,"EXECUTED");assert.equal(m.execute(action,person,3).status,"REPLAY_NOOP");assert.equal(m.executions.size,1);});
+test("changed payload invalidates use of prior approval",()=>{const m=new P.Approvals();const r=m.propose(action,person,0);m.review(r.key,"APPROVED",person,1);assert.throws(()=>m.execute({...action,amount:41},person,2),/exact payload/);assert.throws(()=>m.propose({...action,order:"other"},person,2),/different payload/);});
+test("approval expires at exact deadline",()=>{const m=new P.Approvals();const r=m.propose(action,person,0);m.review(r.key,"APPROVED",person,0);assert.throws(()=>m.execute(action,person,60000),/expired/);});
+test("high value requires manager role",()=>{const m=new P.Approvals();const r=m.propose({...action,amount:101},person,0);assert.throws(()=>m.review(r.key,"APPROVED",person,1),/manager/);m.review(r.key,"APPROVED",{...person,role:"manager"},1);});
+test("cross-tenant operations denied",()=>{const m=new P.Approvals();const r=m.propose(action,person,0);assert.throws(()=>m.review(r.key,"APPROVED",{...person,tenant:"beta"},1),/tenant/);});
+test("invalid amounts and currencies rejected",()=>{for(const amount of [-1,NaN,Infinity,1.005])assert.throws(()=>P.payload({...action,amount}));assert.throws(()=>P.payload({...action,currency:"EUR"}));});
+test("rejected request cannot be executed or reapproved",()=>{const m=new P.Approvals();const r=m.propose(action,person,0);m.review(r.key,"REJECTED",person,1);assert.throws(()=>m.execute(action,person,2));assert.throws(()=>m.review(r.key,"APPROVED",person,2));});
