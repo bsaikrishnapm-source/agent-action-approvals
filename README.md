@@ -1,5 +1,15 @@
 # Agent Action Approval Simulator
 
+## Product decision at a glance
+
+**User need:** Let an operator inspect an agent's proposed refund before it changes customer state.
+
+**Decision:** Require approval of the exact action, escalate amounts above the fictional $100 threshold and reject expired or altered approvals.
+
+**Inspect:** [Requirements and state model](PRODUCT.md) · [Guided demo](DEMO_GUIDE.md) · [Validation boundaries](VALIDATION.md).
+
+**Evidence:** Ten original Python policy scenarios plus a browser approval flow. The browser binds approvals to action payloads and handles replays within a tab; durable execution and authenticated authority remain open.
+
 ## Interactive product demo — implemented
 
 **Approval Inbox:** A pending/approved/rejected/expired/executed request flow, exact payload binding, manager threshold, approval TTL, and replay no-op within a tab.
@@ -50,7 +60,7 @@ Approval adds friction, but an agent's proposed action is not authorization. A v
 
 ## Limitations
 
-Approval, tenancy, and duplicate status are trusted booleans in this simulation. Production must derive them from authenticated server-side state, bind approval to the exact action payload, and use a transaction-backed idempotency store. Passing fixture tests is not a security audit.
+In the original Python simulator, approval, tenancy, and duplicate status are trusted booleans. The browser demo adds exact payload binding, approval expiry and in-memory replay handling. Production must derive them from authenticated server-side state, bind approval to the exact action payload, and use a transaction-backed idempotency store. Passing fixture tests is not a security audit.
 
 ## Run locally
 
